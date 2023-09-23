@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<iframe id="wp-playground" style="width: 1200px; height: 800px"></iframe>
+<script type="module">
+	import { startPlaygroundWeb } from 'https://unpkg.com/@wp-playground/client/index.js';
+
+	const client = await startPlaygroundWeb({
+		iframe: document.getElementById('wp-playground'),
+		remoteUrl: `https://playground.wordpress.net/remote.html`,
+		blueprint: {
+			landingPage: '/wp-admin/',
+			preferredVersions: {
+				php: '8.0',
+				wp: 'latest',
+			},
+			steps: [
+				{
+					step: 'login',
+					username: 'admin',
+					password: 'password',
+				},
+				{
+                    step: "installPlugin",
+                    pluginZipFile : {
+                        "resource" : "url",
+                        "url" : "https://wordpress.org/plugins/woocommerce/"
+                    }
+                },
+                {
+                    step : "installPlugin",
+                    pluginZipFile : {
+                        "resource" : "url",
+                        "url" : "https://wordpress.org/plugins/doko-box-builder/"
+                    }
+                }
+			],
+		},
+	});
+
+	const response = await client.run({
+		code: '<?php echo "Hi!"; ',
+	});
+	console.log(response.text);
+</script>
